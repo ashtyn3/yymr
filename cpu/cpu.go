@@ -1,7 +1,6 @@
 package cpu
 
 import (
-	"fmt"
 	"log"
 	"yymr/cpu/memory"
 	opcode "yymr/opcodes"
@@ -42,7 +41,6 @@ func (c *CPU) Fetch() uint16 {
 }
 
 func (c *CPU) Execute(op uint16) int {
-	fmt.Println(op)
 	switch op {
 	// Move instructions
 	case opcode.MovLitReg:
@@ -223,7 +221,7 @@ func (c *CPU) Step() int {
 	return c.Execute(op)
 }
 
-func (c *CPU) execute() {
+func (c *CPU) Run() {
 	for {
 		if c.Step() == 1 {
 			break

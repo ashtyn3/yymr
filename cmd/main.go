@@ -55,8 +55,10 @@ func main() {
 	i++
 	ram.Mem[i] = cpu.R2
 
-	c.Step()
-	c.Step()
-	c.Step()
+	i++
+	ram.Mem[i] = opcode.Hlt
+
+	c.Run()
 	debugRegisters(*c)
+
 }
