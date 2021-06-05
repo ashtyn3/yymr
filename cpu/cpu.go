@@ -41,9 +41,10 @@ func (c *CPU) Fetch() uint16 {
 	return ip
 }
 
-func (c *CPU) Execute(op uint16) {
+func (c *CPU) Execute(op uint16) int {
 	fmt.Println(op)
 	switch op {
+	// Move instructions
 	case opcode.MovLitReg:
 		{
 			reg := c.Fetch()
@@ -79,6 +80,7 @@ func (c *CPU) Execute(op uint16) {
 			c.Memory.SetInt(toMem, val)
 			break
 		}
+	// Math instructions
 	case opcode.AddRegReg:
 		{
 			r1 := c.Fetch()
@@ -89,10 +91,142 @@ func (c *CPU) Execute(op uint16) {
 			c.setRegister(ACC, val1+val2)
 			break
 		}
+	// Jump instructions
+	case opcode.JmpEq:
+		{
+			lit := c.Fetch()
+			pointer := c.Fetch()
+
+			if lit == c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.JmpRegEq:
+		{
+			reg := c.Fetch()
+			pointer := c.Fetch()
+
+			if c.getRegister(uint8(reg)) == c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.JmpNotEq:
+		{
+			lit := c.Fetch()
+			pointer := c.Fetch()
+
+			if lit != c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.JmpNotRegEq:
+		{
+			reg := c.Fetch()
+			pointer := c.Fetch()
+
+			if c.getRegister(uint8(reg)) != c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.JmpLessEq:
+		{
+			lit := c.Fetch()
+			pointer := c.Fetch()
+
+			if lit <= c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.JmpLessRegEq:
+		{
+			reg := c.Fetch()
+			pointer := c.Fetch()
+
+			if c.getRegister(uint8(reg)) <= c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.JmpLess:
+		{
+			lit := c.Fetch()
+			pointer := c.Fetch()
+
+			if lit < c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.JmpLessReg:
+		{
+			reg := c.Fetch()
+			pointer := c.Fetch()
+
+			if c.getRegister(uint8(reg)) < c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.JmpGreaterEq:
+		{
+			lit := c.Fetch()
+			pointer := c.Fetch()
+
+			if lit >= c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.JmpGreaterRegEq:
+		{
+			reg := c.Fetch()
+			pointer := c.Fetch()
+
+			if c.getRegister(uint8(reg)) >= c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.JmpGreater:
+		{
+			lit := c.Fetch()
+			pointer := c.Fetch()
+
+			if lit > c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.JmpRegGreater:
+		{
+			reg := c.Fetch()
+			pointer := c.Fetch()
+
+			if c.getRegister(uint8(reg)) > c.getRegister(ACC) {
+				c.setRegister(Ip, pointer)
+			}
+			break
+		}
+	case opcode.Hlt:
+		return 1
 	}
+	return 0
 }
 
-func (c *CPU) Step() {
+func (c *CPU) Step() int {
 	op := c.Fetch()
-	c.Execute(op)
+	return c.Execute(op)
+}
+
+func (c *CPU) execute() {
+	for {
+		if c.Step() == 1 {
+			break
+		}
+	}
 }
