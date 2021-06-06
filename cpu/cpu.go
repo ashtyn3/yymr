@@ -1,6 +1,7 @@
 package cpu
 
 import (
+	"fmt"
 	"log"
 	"yymr/cpu/memory"
 	opcode "yymr/opcodes"
@@ -12,14 +13,14 @@ type CPU struct {
 }
 
 func (c *CPU) getRegister(r uint8) uint16 {
-	if r > 12 {
+	if int(r) > len(c.Registers) {
 		log.Fatalln("Failed to get register:", r)
 	}
 	return c.Registers[r]
 }
 
 func (c *CPU) setRegister(r uint8, value uint16) {
-	if r > 12 {
+	if int(r) > len(c.Registers) {
 		log.Fatalln("Failed to get register:", r)
 	}
 	c.Registers[r] = value
@@ -78,6 +79,36 @@ func (c *CPU) Execute(op uint16) int {
 			c.Memory.SetInt(toMem, val)
 			break
 		}
+	case opcode.MovLitMem:
+		{
+			lit := c.Fetch()
+			toMem := c.Fetch()
+
+			c.Memory.SetInt(toMem, lit)
+			break
+		}
+	case opcode.MovRegPtrReg:
+		{
+			rFrom := c.Fetch()
+			rTo := c.Fetch()
+			addr := c.getRegister(uint8(rFrom))
+			val := c.Memory.GetInt(addr)
+
+			c.setRegister(uint8(rTo), val)
+			break
+		}
+	case opcode.MovLitAReg:
+		{
+			base := c.Fetch()
+			offset := c.getRegister(uint8(c.Fetch()))
+			to := c.Fetch()
+
+			val := c.Memory.GetInt(base + offset)
+
+			c.setRegister(uint8(to), val)
+
+			break
+		}
 	// Math instructions
 	case opcode.AddRegReg:
 		{
@@ -87,6 +118,26 @@ func (c *CPU) Execute(op uint16) int {
 			val2 := c.getRegister(uint8(r2))
 
 			c.setRegister(ACC, val1+val2)
+			break
+		}
+	case opcode.MulRegReg:
+		{
+			r1 := c.Fetch()
+			r2 := c.Fetch()
+			val1 := c.getRegister(uint8(r1))
+			val2 := c.getRegister(uint8(r2))
+
+			c.setRegister(ACC, val1*val2)
+			break
+		}
+	case opcode.DivRegReg:
+		{
+			r1 := c.Fetch()
+			r2 := c.Fetch()
+			val1 := c.getRegister(uint8(r1))
+			val2 := c.getRegister(uint8(r2))
+
+			c.setRegister(ACC, val1/val2)
 			break
 		}
 	// Jump instructions
@@ -219,6 +270,28 @@ func (c *CPU) Execute(op uint16) int {
 func (c *CPU) Step() int {
 	op := c.Fetch()
 	return c.Execute(op)
+}
+
+func (c *CPU) DebugRegisters() {
+	rCount := 1
+	for i, r := range c.Registers {
+		if i == Ip {
+			fmt.Printf("IP:  0x%04x\n", r)
+		}
+		if i == ACC {
+			fmt.Printf("ACC: 0x%04x\n", r)
+		}
+		if i == Sp {
+			fmt.Printf("SP:  0x%04x\n", r)
+		}
+		if i == Fp {
+			fmt.Printf("Fp:  0x%04x\n", r)
+		}
+		if i >= R1 {
+			fmt.Printf("R%d:  0x%04x\n", rCount, r)
+			rCount++
+		}
+	}
 }
 
 func (c *CPU) Run() {

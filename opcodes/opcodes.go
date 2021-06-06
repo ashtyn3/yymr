@@ -2,11 +2,25 @@ package opcode
 
 const (
 	MovLitReg = 0x10
-	MovRegReg = 0x11
-	MovRegMem = 0x12
-	MovMemReg = 0x13
-	AddRegReg = 0x14
+	MovLitMem = 0x11
 
+	MovRegPtrReg = 0x12
+	MovLitAReg   = 0x13
+
+	MovRegReg = 0x14
+	MovRegMem = 0x15
+	MovMemReg = 0x16
+
+	// Math
+	AddRegReg = 0x30
+	MulRegReg = 0x31
+
+	DivRegReg = 0x32
+
+	IncReg = 0x33
+	DecReg = 0x34
+
+	// conditionals
 	JmpNotEq    = 0x21
 	JmpNotRegEq = 0x22
 
@@ -25,11 +39,16 @@ const (
 	JmpGreater    = 0x2b
 	JmpRegGreater = 0x2c
 
+	// stack
 	PshLit = 0x31
 	PshReg = 0x32
 	Pop    = 0x33
+
+	// sub-routine
 	CalLit = 0x34
 	CalReg = 0x35
 	Ret    = 0x36
-	Hlt    = 0x40
+
+	// sys-calls
+	Hlt = 0x40
 )
