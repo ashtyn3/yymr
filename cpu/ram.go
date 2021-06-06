@@ -4,6 +4,9 @@ type Ram struct {
 	Mem []uint16
 }
 
+func (r *Ram) Remap() bool {
+	return false
+}
 func (r *Ram) Start() uint {
 	return 0x0000
 }
