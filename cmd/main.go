@@ -30,7 +30,7 @@ func main() {
 	c.Memory.Map(ram)
 	c.Memory.Map(screen)
 	i := -1
-	for pos, char := range "Hello Jeff!" {
+	for pos, char := range "Hello world!" {
 		ram = printChar(int(char), ram, &i, pos)
 	}
 
