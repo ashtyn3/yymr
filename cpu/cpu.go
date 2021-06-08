@@ -10,6 +10,7 @@ import (
 type CPU struct {
 	Registers [12]uint16
 	Memory    *memory.Mapper
+	frameSize uint16
 }
 
 func (c *CPU) getRegister(r uint8) uint16 {
@@ -29,6 +30,8 @@ func (c *CPU) setRegister(r uint8, value uint16) {
 func Cpu() *CPU {
 	c := &CPU{}
 	c.Memory = &memory.Mapper{}
+	c.Registers[2] = uint16(len(c.Memory.Ranges) - 1)
+	c.Registers[3] = uint16(len(c.Memory.Ranges) - 1)
 
 	return c
 }
@@ -128,6 +131,22 @@ func (c *CPU) Execute(op uint16) int {
 			val2 := c.getRegister(uint8(r2))
 
 			c.setRegister(ACC, val1*val2)
+			break
+		}
+	case opcode.IncReg:
+		{
+			r := c.Fetch()
+			val := c.getRegister(uint8(r)) + 1
+
+			c.setRegister(uint8(r), val)
+			break
+		}
+	case opcode.DecReg:
+		{
+			r := c.Fetch()
+			val := c.getRegister(uint8(r)) - 1
+
+			c.setRegister(uint8(r), val)
 			break
 		}
 	case opcode.DivRegReg:
@@ -260,6 +279,46 @@ func (c *CPU) Execute(op uint16) int {
 				c.setRegister(Ip, pointer)
 			}
 			break
+		}
+
+	// Stack
+	case opcode.PshLit:
+		{
+			val := c.Fetch()
+			sp := c.getRegister(Sp)
+
+			c.Memory.SetInt(sp, val)
+			c.setRegister(Sp, sp-1)
+			break
+		}
+	case opcode.PshReg:
+		{
+			val := c.getRegister(uint8(c.Fetch()))
+			c.push(val)
+			break
+		}
+	case opcode.Pop:
+		{
+			r := c.Fetch()
+			val := c.pop()
+			c.setRegister(uint8(r), val)
+			break
+		}
+		// sub-routines
+
+	case opcode.CalLit:
+		{
+			addr := c.Fetch()
+			c.saveState()
+
+			c.setRegister(Ip, addr)
+		}
+	case opcode.CalReg:
+		{
+			addr := c.getRegister(uint8(c.Fetch()))
+			c.saveState()
+
+			c.setRegister(Ip, addr)
 		}
 	case opcode.Hlt:
 		return 1

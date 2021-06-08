@@ -12,13 +12,13 @@ const (
 	MovMemReg = 0x16
 
 	// Math
-	AddRegReg = 0x30
-	MulRegReg = 0x31
+	AddRegReg = 0x40
+	MulRegReg = 0x41
 
-	DivRegReg = 0x32
+	DivRegReg = 0x42
 
-	IncReg = 0x33
-	DecReg = 0x34
+	IncReg = 0x43
+	DecReg = 0x44
 
 	// conditionals
 	JmpNotEq    = 0x21
@@ -50,5 +50,5 @@ const (
 	Ret    = 0x36
 
 	// sys-calls
-	Hlt = 0x40
+	Hlt = 0x50
 )

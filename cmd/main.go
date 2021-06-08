@@ -30,12 +30,45 @@ func main() {
 	c.Memory.Map(ram)
 	c.Memory.Map(screen)
 	i := -1
-	for pos, char := range "Hello world!" {
-		ram = printChar(int(char), ram, &i, pos)
-	}
+
+	i++
+	ram.Mem[i] = opcode.MovLitReg
+	i++
+	ram.Mem[i] = cpu.R1
+	i++
+	ram.Mem[i] = 0x0001
+
+	i++
+	ram.Mem[i] = opcode.MovLitReg
+	i++
+	ram.Mem[i] = cpu.R2
+	i++
+	ram.Mem[i] = 0x0002
+
+	i++
+	ram.Mem[i] = opcode.PshReg
+	i++
+	ram.Mem[i] = cpu.R1
+
+	i++
+	ram.Mem[i] = opcode.PshReg
+	i++
+	ram.Mem[i] = cpu.R2
+
+	i++
+	ram.Mem[i] = opcode.Pop
+	i++
+	ram.Mem[i] = cpu.R1
+
+	i++
+	ram.Mem[i] = opcode.Pop
+	i++
+	ram.Mem[i] = cpu.R2
 
 	i++
 	ram.Mem[i] = opcode.Hlt
 
 	c.Run()
+	c.DebugRegisters()
+
 }
