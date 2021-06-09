@@ -11,7 +11,7 @@ main {
 }
 
 start {
-    (psh 0x01)
+    (push 0x01)
     (pop @2)
     (call $main)
 }
