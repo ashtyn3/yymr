@@ -1,8 +1,9 @@
-# Wr (Written-version)
+# Wr (Written-representation)
 
 **syntax**
 
 ```
+" Comments look like this...
 
 main {
     (mul 2, @2)
