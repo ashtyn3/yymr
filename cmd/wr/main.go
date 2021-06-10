@@ -2,20 +2,18 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"yymr/wr/token"
 )
 
 func main() {
 
-	for {
-		var f token.Chars
-		var l []byte
-		fmt.Scanln(&l)
+	file, _ := os.ReadFile("hi.s")
 
-		f = strings.Split(string(l), "")
-		f = append(f, "EOF")
+	var buf token.Chars = strings.Split(string(file), "")
+	buf = append(buf, "EOF")
 
-		fmt.Println(f.Tokenize())
-	}
+	fmt.Println(buf.Tokenize())
+	os.Exit(0)
 }

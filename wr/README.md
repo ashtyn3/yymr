@@ -6,13 +6,13 @@
 " Comments look like this...
 
 main {
-    (mul 2, @2)
+    (mul 2, @r2)
     ret;;
 }
 
 start {
     (push 0x01)
-    (pop @2)
+    (pop @r2)
     (call $main)
 }
 ```

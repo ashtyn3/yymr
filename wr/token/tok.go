@@ -12,7 +12,9 @@ const (
 	RightBrack = 9
 	RegisterId = 10
 	MemId      = 11
-	Unknown    = 12
+	RouteId    = 12
+	Unknown    = 13
+	LineSep    = 14
 )
 
 type Token struct {

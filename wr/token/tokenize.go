@@ -2,6 +2,7 @@ package token
 
 import (
 	"regexp"
+	"strings"
 )
 
 type Chars []string
@@ -29,7 +30,15 @@ func (c Chars) token() *string {
 }
 
 func isSpace(s string) bool {
-	m, _ := regexp.MatchString(`[\s]`, s)
+	m, _ := regexp.MatchString(`[\s\r\t]`, s)
+	return m
+}
+
+func isIdStart(s string) bool {
+	if s == "EOF" {
+		return false
+	}
+	m, _ := regexp.MatchString(`[A-Za-z_]`, s)
 	return m
 }
 
@@ -37,7 +46,7 @@ func isId(s string) bool {
 	if s == "EOF" {
 		return false
 	}
-	m, _ := regexp.MatchString(`[A-Za-z_]([A-Z_a-z0-9]+)?`, s)
+	m, _ := regexp.MatchString(`[A-Z_a-z0-9]+`, s)
 	return m
 }
 
@@ -49,23 +58,24 @@ func isHex(s string) bool {
 	return m
 }
 
-func (c *Chars) Tokenize() []Token {
+func (c Chars) Tokenize() []Token {
 	tokens := []Token{}
-	for {
+	for Pointer < len(c) {
+		if currentTok == "\n" {
+			Lines++
+			c.token()
+			continue
+		}
+
 		for isSpace(currentTok) {
 			c.token()
 		}
 
-		if currentTok == "\n" {
-			Lines++
-			c.token()
-		}
-
-		if currentTok == "EOF" {
+		if strings.TrimSpace(currentTok) == "EOF" || Pointer == len(c)-1 {
 			break
 		}
 
-		if isId(currentTok) {
+		if isIdStart(currentTok) {
 			id := currentTok
 			for isId(currentTok) {
 				if isId(*c.token()) == false {
@@ -73,7 +83,39 @@ func (c *Chars) Tokenize() []Token {
 				}
 				id += currentTok
 			}
+			if id == "mov" {
+				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
+				continue
+
+			} else if id == "push" {
+				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
+				continue
+
+			} else if id == "pop" {
+				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
+				continue
+
+			} else if id == "call" {
+				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
+				continue
+
+			} else if id == "add" {
+				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
+				continue
+
+			} else if id == "mul" {
+				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
+				continue
+
+			} else if id == "div" {
+				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
+				continue
+
+			}
+
 			tokens = append(tokens, Token{Type: Id, Line: Lines, Text: id})
+
+			continue
 		}
 
 		if currentTok == "0" && *c.peekToken() == "x" {
@@ -87,9 +129,98 @@ func (c *Chars) Tokenize() []Token {
 				id += currentTok
 			}
 			tokens = append(tokens, Token{Type: Hex, Line: Lines, Text: id})
+
+			continue
 		}
 
-		tokens = append(tokens, Token{Type: Unknown, Line: Lines})
+		if currentTok == "@" {
+			c.token()
+			id := currentTok
+			for isId(currentTok) {
+				if isId(*c.token()) == false {
+					break
+				}
+				id += currentTok
+			}
+			tokens = append(tokens, Token{Type: RegisterId, Line: Lines, Text: id})
+			continue
+		}
+
+		if currentTok == "$" {
+			c.token()
+			id := currentTok
+			for isId(currentTok) {
+				if isId(*c.token()) == false {
+					break
+				}
+				id += currentTok
+			}
+			tokens = append(tokens, Token{Type: RouteId, Line: Lines, Text: id})
+
+			continue
+		}
+
+		if currentTok == "%" {
+			c.token()
+			id := currentTok
+			for isId(currentTok) {
+				if isId(*c.token()) == false {
+					break
+				}
+				id += currentTok
+			}
+			tokens = append(tokens, Token{Type: MemId, Line: Lines, Text: id})
+
+			continue
+		}
+
+		if currentTok == "\"" {
+			for {
+				c.token()
+				if currentTok == "\n" || currentTok == "EOF" {
+					break
+				}
+			}
+			continue
+		}
+
+		if currentTok == ";" && *c.peekToken() == ";" {
+			c.token()
+			tokens = append(tokens, Token{Type: LineSep, Line: Lines, Text: ";;"})
+			c.token()
+			continue
+
+		}
+
+		if currentTok == "," {
+			tokens = append(tokens, Token{Type: LeftParen, Line: Lines, Text: ","})
+			c.token()
+			continue
+		}
+		if currentTok == "(" {
+			tokens = append(tokens, Token{Type: LeftParen, Line: Lines, Text: "("})
+			c.token()
+			continue
+		}
+
+		if currentTok == ")" {
+			tokens = append(tokens, Token{Type: RightParen, Line: Lines, Text: ")"})
+			c.token()
+			continue
+		}
+
+		if currentTok == "{" {
+			tokens = append(tokens, Token{Type: LeftBrack, Line: Lines, Text: "{"})
+			c.token()
+			continue
+		}
+
+		if currentTok == "}" {
+			tokens = append(tokens, Token{Type: RightBrack, Line: Lines, Text: "}"})
+			c.token()
+			continue
+		}
+		tokens = append(tokens, Token{Type: Unknown, Line: Lines, Text: currentTok})
 	}
 	return tokens
 }
