@@ -60,4 +60,8 @@ func (b *Build) Assemble() {
 	}
 	f, _ := os.Create(b.Filename)
 	binary.Write(f, binary.LittleEndian, Mem)
+
+	if b.Exec {
+		os.Chmod(b.Filename, 0700)
+	}
 }
