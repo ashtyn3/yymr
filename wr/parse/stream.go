@@ -22,7 +22,7 @@ type Route struct {
 }
 
 type HexLit struct {
-	value uint16
+	Value uint16
 }
 
 type CharsLit struct {

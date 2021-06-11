@@ -101,7 +101,7 @@ func parseLit() ParserToken {
 	if Tok.Type == token.Hex {
 		lit.Type = "hex"
 		num, _ := strconv.ParseUint(Tok.Text, 16, 16)
-		lit.Hex.value = uint16(num)
+		lit.Hex.Value = uint16(num)
 	}
 
 	return ParserToken{Type: "lit", Literal: &lit}
@@ -138,7 +138,7 @@ func do(move bool) ParserToken {
 	return ParserToken{}
 }
 
-func Parse(toks []token.Token) {
+func Parse(toks []token.Token) []ParserToken {
 	Tokens = toks
 	parserToks := []ParserToken{}
 	for {
@@ -148,5 +148,5 @@ func Parse(toks []token.Token) {
 		}
 		parserToks = append(parserToks, end)
 	}
-	fmt.Println(parserToks[0].Routine.Body[1].Instruction.Args[0])
+	return parserToks
 }

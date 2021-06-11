@@ -49,8 +49,8 @@ func (c *CPU) Execute(op uint16) int {
 	// Move instructions
 	case opcode.Opcodes["MovLitReg"].Code:
 		{
-			reg := c.Fetch()
 			val := c.Fetch()
+			reg := c.Fetch()
 
 			c.setRegister(uint8(reg), val)
 			break

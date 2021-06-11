@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"strings"
+	"yymr/wr/assemble"
 	"yymr/wr/parse"
 	"yymr/wr/token"
 )
@@ -14,6 +15,7 @@ func main() {
 	var buf token.Chars = strings.Split(string(file), "")
 	buf = append(buf, "EOF")
 
-	parse.Parse(buf.Tokenize())
-	os.Exit(0)
+	toks := parse.Parse(buf.Tokenize())
+	b := assemble.Build{Filename: "a.out", Exec: true, Toks: toks}
+	b.Assemble()
 }
