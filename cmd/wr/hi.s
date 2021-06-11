@@ -1,11 +1,4 @@
-main {
-    (mul 0x02, @r2)
-    ret;;
+ main {
+    (mov 0x02, @r2)
+	(inc @r2)
 }
-
-start {
-    (psh 0x01)
-    (pop @r2)
-    (call $main)
-}
-

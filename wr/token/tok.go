@@ -15,6 +15,7 @@ const (
 	RouteId    = 12
 	Unknown    = 13
 	LineSep    = 14
+	End        = 0
 )
 
 type Token struct {

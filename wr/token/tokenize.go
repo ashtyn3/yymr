@@ -86,31 +86,27 @@ func (c Chars) Tokenize() []Token {
 			if id == "mov" {
 				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
 				continue
-
 			} else if id == "push" {
 				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
 				continue
-
 			} else if id == "pop" {
 				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
 				continue
-
 			} else if id == "call" {
 				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
 				continue
-
 			} else if id == "add" {
 				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
 				continue
-
 			} else if id == "mul" {
 				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
 				continue
-
 			} else if id == "div" {
 				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
 				continue
-
+			} else if id == "inc" || id == "dec" {
+				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
+				continue
 			}
 
 			tokens = append(tokens, Token{Type: Id, Line: Lines, Text: id})
@@ -193,7 +189,7 @@ func (c Chars) Tokenize() []Token {
 		}
 
 		if currentTok == "," {
-			tokens = append(tokens, Token{Type: LeftParen, Line: Lines, Text: ","})
+			tokens = append(tokens, Token{Type: Unknown, Line: Lines, Text: ","})
 			c.token()
 			continue
 		}

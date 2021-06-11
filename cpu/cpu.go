@@ -47,7 +47,7 @@ func (c *CPU) Fetch() uint16 {
 func (c *CPU) Execute(op uint16) int {
 	switch op {
 	// Move instructions
-	case opcode.MovLitReg:
+	case opcode.Opcodes["MovLitReg"].Code:
 		{
 			reg := c.Fetch()
 			val := c.Fetch()
@@ -55,7 +55,7 @@ func (c *CPU) Execute(op uint16) int {
 			c.setRegister(uint8(reg), val)
 			break
 		}
-	case opcode.MovRegReg:
+	case opcode.Opcodes["MovRegReg"].Code:
 		{
 			from := c.Fetch()
 			val := c.getRegister(uint8(from))
@@ -64,7 +64,7 @@ func (c *CPU) Execute(op uint16) int {
 			c.setRegister(uint8(to), val)
 			break
 		}
-	case opcode.MovMemReg:
+	case opcode.Opcodes["MovMemReg"].Code:
 		{
 			fromMem := c.Fetch()
 			to := c.Fetch()
@@ -73,7 +73,7 @@ func (c *CPU) Execute(op uint16) int {
 			c.setRegister(uint8(to), val)
 			break
 		}
-	case opcode.MovRegMem:
+	case opcode.Opcodes["MovRegMem"].Code:
 		{
 			fromReg := c.Fetch()
 			toMem := c.Fetch()
@@ -82,7 +82,7 @@ func (c *CPU) Execute(op uint16) int {
 			c.Memory.SetInt(toMem, val)
 			break
 		}
-	case opcode.MovLitMem:
+	case opcode.Opcodes["MovLitMem"].Code:
 		{
 			lit := c.Fetch()
 			toMem := c.Fetch()
@@ -90,7 +90,7 @@ func (c *CPU) Execute(op uint16) int {
 			c.Memory.SetInt(toMem, lit)
 			break
 		}
-	case opcode.MovRegPtrReg:
+	case opcode.Opcodes["MovRegPtrReg"].Code:
 		{
 			rFrom := c.Fetch()
 			rTo := c.Fetch()
@@ -100,7 +100,7 @@ func (c *CPU) Execute(op uint16) int {
 			c.setRegister(uint8(rTo), val)
 			break
 		}
-	case opcode.MovLitAReg:
+	case opcode.Opcodes["MovLitAReg"].Code:
 		{
 			base := c.Fetch()
 			offset := c.getRegister(uint8(c.Fetch()))
@@ -112,8 +112,8 @@ func (c *CPU) Execute(op uint16) int {
 
 			break
 		}
-	// Math instructions
-	case opcode.AddRegReg:
+		// Math instructions
+	case opcode.Opcodes["AddRegReg"].Code:
 		{
 			r1 := c.Fetch()
 			r2 := c.Fetch()
@@ -123,7 +123,7 @@ func (c *CPU) Execute(op uint16) int {
 			c.setRegister(ACC, val1+val2)
 			break
 		}
-	case opcode.MulRegReg:
+	case opcode.Opcodes["MulRegReg"].Code:
 		{
 			r1 := c.Fetch()
 			r2 := c.Fetch()
@@ -133,7 +133,7 @@ func (c *CPU) Execute(op uint16) int {
 			c.setRegister(ACC, val1*val2)
 			break
 		}
-	case opcode.IncReg:
+	case opcode.Opcodes["opcode.IncReg"].Code:
 		{
 			r := c.Fetch()
 			val := c.getRegister(uint8(r)) + 1
@@ -141,7 +141,7 @@ func (c *CPU) Execute(op uint16) int {
 			c.setRegister(uint8(r), val)
 			break
 		}
-	case opcode.DecReg:
+	case opcode.Opcodes["DecReg"].Code:
 		{
 			r := c.Fetch()
 			val := c.getRegister(uint8(r)) - 1
@@ -149,7 +149,7 @@ func (c *CPU) Execute(op uint16) int {
 			c.setRegister(uint8(r), val)
 			break
 		}
-	case opcode.DivRegReg:
+	case opcode.Opcodes["opcode.DivRegReg"].Code:
 		{
 			r1 := c.Fetch()
 			r2 := c.Fetch()
@@ -160,7 +160,7 @@ func (c *CPU) Execute(op uint16) int {
 			break
 		}
 	// Jump instructions
-	case opcode.JmpEq:
+	case opcode.Opcodes["opcode.JmpEq"].Code:
 		{
 			lit := c.Fetch()
 			pointer := c.Fetch()
@@ -170,7 +170,7 @@ func (c *CPU) Execute(op uint16) int {
 			}
 			break
 		}
-	case opcode.JmpRegEq:
+	case opcode.Opcodes["JmpRegEq"].Code:
 		{
 			reg := c.Fetch()
 			pointer := c.Fetch()
@@ -180,7 +180,7 @@ func (c *CPU) Execute(op uint16) int {
 			}
 			break
 		}
-	case opcode.JmpNotEq:
+	case opcode.Opcodes["JmpNotEq"].Code:
 		{
 			lit := c.Fetch()
 			pointer := c.Fetch()
@@ -190,7 +190,7 @@ func (c *CPU) Execute(op uint16) int {
 			}
 			break
 		}
-	case opcode.JmpNotRegEq:
+	case opcode.Opcodes["JmpNotRegEq"].Code:
 		{
 			reg := c.Fetch()
 			pointer := c.Fetch()
@@ -200,7 +200,7 @@ func (c *CPU) Execute(op uint16) int {
 			}
 			break
 		}
-	case opcode.JmpLessEq:
+	case opcode.Opcodes["JmpLessEq"].Code:
 		{
 			lit := c.Fetch()
 			pointer := c.Fetch()
@@ -210,7 +210,7 @@ func (c *CPU) Execute(op uint16) int {
 			}
 			break
 		}
-	case opcode.JmpLessRegEq:
+	case opcode.Opcodes["JmpLessRegEq"].Code:
 		{
 			reg := c.Fetch()
 			pointer := c.Fetch()
@@ -220,7 +220,7 @@ func (c *CPU) Execute(op uint16) int {
 			}
 			break
 		}
-	case opcode.JmpLess:
+	case opcode.Opcodes["OpcodesJmpLess"].Code:
 		{
 			lit := c.Fetch()
 			pointer := c.Fetch()
@@ -230,7 +230,7 @@ func (c *CPU) Execute(op uint16) int {
 			}
 			break
 		}
-	case opcode.JmpLessReg:
+	case opcode.Opcodes["JmpLessReg"].Code:
 		{
 			reg := c.Fetch()
 			pointer := c.Fetch()
@@ -240,7 +240,7 @@ func (c *CPU) Execute(op uint16) int {
 			}
 			break
 		}
-	case opcode.JmpGreaterEq:
+	case opcode.Opcodes["JmpGreaterEq"].Code:
 		{
 			lit := c.Fetch()
 			pointer := c.Fetch()
@@ -250,7 +250,7 @@ func (c *CPU) Execute(op uint16) int {
 			}
 			break
 		}
-	case opcode.JmpGreaterRegEq:
+	case opcode.Opcodes["JmpGreaterRegEq"].Code:
 		{
 			reg := c.Fetch()
 			pointer := c.Fetch()
@@ -260,7 +260,7 @@ func (c *CPU) Execute(op uint16) int {
 			}
 			break
 		}
-	case opcode.JmpGreater:
+	case opcode.Opcodes["JmpGreater"].Code:
 		{
 			lit := c.Fetch()
 			pointer := c.Fetch()
@@ -270,7 +270,7 @@ func (c *CPU) Execute(op uint16) int {
 			}
 			break
 		}
-	case opcode.JmpRegGreater:
+	case opcode.Opcodes["JmpRegGreater"].Code:
 		{
 			reg := c.Fetch()
 			pointer := c.Fetch()
@@ -282,7 +282,7 @@ func (c *CPU) Execute(op uint16) int {
 		}
 
 	// Stack
-	case opcode.PshLit:
+	case opcode.Opcodes["PshLit"].Code:
 		{
 			val := c.Fetch()
 			sp := c.getRegister(Sp)
@@ -291,13 +291,13 @@ func (c *CPU) Execute(op uint16) int {
 			c.setRegister(Sp, sp-1)
 			break
 		}
-	case opcode.PshReg:
+	case opcode.Opcodes["PshReg"].Code:
 		{
 			val := c.getRegister(uint8(c.Fetch()))
 			c.push(val)
 			break
 		}
-	case opcode.Pop:
+	case opcode.Opcodes["Pop"].Code:
 		{
 			r := c.Fetch()
 			val := c.pop()
@@ -306,21 +306,28 @@ func (c *CPU) Execute(op uint16) int {
 		}
 		// sub-routines
 
-	case opcode.CalLit:
+	case opcode.Opcodes["CalLit"].Code:
 		{
 			addr := c.Fetch()
 			c.saveState()
 
 			c.setRegister(Ip, addr)
 		}
-	case opcode.CalReg:
+	case opcode.Opcodes["CalReg"].Code:
 		{
 			addr := c.getRegister(uint8(c.Fetch()))
 			c.saveState()
 
 			c.setRegister(Ip, addr)
 		}
-	case opcode.Hlt:
+	case opcode.Opcodes["Ret"].Code:
+		{
+			addr := c.getRegister(uint8(c.Fetch()))
+			c.popState()
+
+			c.setRegister(Ip, addr)
+		}
+	case opcode.Opcodes["Hlt"].Code:
 		return 1
 	}
 	return 0

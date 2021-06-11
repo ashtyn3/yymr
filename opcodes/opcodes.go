@@ -1,54 +1,53 @@
 package opcode
 
-const (
-	MovLitReg = 0x10
-	MovLitMem = 0x11
+var Opcodes = map[string]Opcode{
+	"MovLitReg": {Code: 0x10, Size: 3},
+	"MovLitMem": {Code: 0x11, Size: 3},
 
-	MovRegPtrReg = 0x12
-	MovLitAReg   = 0x13
+	"MovRegPtrReg": {Code: 0x12, Size: 3},
+	"MovLitAReg":   {Code: 0x13, Size: 4},
 
-	MovRegReg = 0x14
-	MovRegMem = 0x15
-	MovMemReg = 0x16
+	"MovRegReg": {Code: 0x14, Size: 3},
+	"MovRegMem": {Code: 0x15, Size: 3},
+	"MovMemReg": {Code: 0x16, Size: 3},
 
 	// Math
-	AddRegReg = 0x40
-	MulRegReg = 0x41
+	"AddRegReg": {Code: 0x40, Size: 3},
+	"MulRegReg": {Code: 0x41, Size: 3},
+	"DivRegReg": {Code: 0x42, Size: 3},
 
-	DivRegReg = 0x42
-
-	IncReg = 0x43
-	DecReg = 0x44
+	"IncReg": {Code: 0x43, Size: 2},
+	"DecReg": {Code: 0x44, Size: 2},
 
 	// conditionals
-	JmpNotEq    = 0x21
-	JmpNotRegEq = 0x22
+	"JmpNotEq":    {Code: 0x21, Size: 3},
+	"JmpNotRegEq": {Code: 0x22, Size: 3},
 
-	JmpEq    = 0x23
-	JmpRegEq = 0x24
+	"JmpEq":    {Code: 0x23, Size: 3},
+	"JmpRegEq": {Code: 0x24, Size: 3},
 
-	JmpLessEq    = 0x25
-	JmpLessRegEq = 0x26
+	"JmpLessEq":    {Code: 0x25, Size: 3},
+	"JmpLessRegEq": {Code: 0x26, Size: 3},
 
-	JmpLess    = 0x27
-	JmpLessReg = 0x28
+	"JmpLess":    {Code: 0x27, Size: 3},
+	"JmpLessReg": {Code: 0x28, Size: 3},
 
-	JmpGreaterEq    = 0x29
-	JmpGreaterRegEq = 0x2a
+	"JmpGreaterEq":    {Code: 0x29, Size: 3},
+	"JmpGreaterRegEq": {Code: 0x2a, Size: 3},
 
-	JmpGreater    = 0x2b
-	JmpRegGreater = 0x2c
+	"JmpGreater":    {Code: 0x2b, Size: 3},
+	"JmpRegGreater": {Code: 0x2c, Size: 3},
 
 	// stack
-	PshLit = 0x31
-	PshReg = 0x32
-	Pop    = 0x33
+	"PshLit": {Code: 0x31, Size: 2},
+	"PshReg": {Code: 0x32, Size: 2},
+	"Pop":    {Code: 0x33, Size: 2},
 
 	// sub-routine
-	CalLit = 0x34
-	CalReg = 0x35
-	Ret    = 0x36
+	"CalLit": {Code: 0x34, Size: 2},
+	"CalReg": {Code: 0x35, Size: 2},
+	"Ret   ": {Code: 0x36},
 
 	// sys-calls
-	Hlt = 0x50
-)
+	"Hlt": {Code: 0x50, Size: 1},
+}

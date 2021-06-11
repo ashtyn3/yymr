@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"strings"
+	"yymr/wr/parse"
 	"yymr/wr/token"
 )
 
@@ -14,6 +14,6 @@ func main() {
 	var buf token.Chars = strings.Split(string(file), "")
 	buf = append(buf, "EOF")
 
-	fmt.Println(buf.Tokenize())
+	parse.Parse(buf.Tokenize())
 	os.Exit(0)
 }
