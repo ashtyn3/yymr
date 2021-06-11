@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"yymr/wr/assemble"
@@ -13,10 +14,15 @@ import (
 func main() {
 	parser := argparse.NewParser("WR", "The tokenizer and parser for yymr-WR (written repersentation)")
 
-	f := parser.File("i", "input", 0060, 0060, &argparse.Options{Required: true})
+	f := parser.File("i", "input", os.O_RDWR, 0600, &argparse.Options{Required: true, Help: "Specifies input file"})
 	output := parser.String("o", "output", &argparse.Options{Default: "a.out"})
 
 	parser.Parse(os.Args)
+
+	if *f == *new(os.File) {
+		fmt.Println(parser.Help("Needs filename"))
+		os.Exit(0)
+	}
 
 	defer f.Close()
 

@@ -1,5 +1,8 @@
  main {
+    (mov 0x01, @r1)
     (mov 0x02, @r2)
-    (mov 0x04, @r1)
-	(inc @r1)
+	(push @r1)
+	(push @r2)
+	(pop @r1)
+	(pop @r2)
 }

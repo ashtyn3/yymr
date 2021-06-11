@@ -84,8 +84,7 @@ func KeywordToCode(s string, args []token.Token) string {
 		for _, t := range args {
 			str += ArgToId(t.Type)
 		}
-	}
-	if strings.HasPrefix(s, "call") || strings.HasPrefix(s, "inc") || strings.HasPrefix(s, "dec") {
+	} else if strings.HasPrefix(s, "call") || strings.HasPrefix(s, "inc") || strings.HasPrefix(s, "dec") || strings.HasPrefix(s, "push") || strings.HasPrefix(s, "call") {
 		if len(args) < 1 {
 			fmt.Println(strconv.Itoa(Tok.Line) + ": too few arguements for " + s + " instruction")
 			os.Exit(0)
