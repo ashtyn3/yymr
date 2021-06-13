@@ -14,7 +14,7 @@ type Build struct {
 	Exec     bool
 	Toks     []parse.ParserToken
 }
-type Memory []uint64
+type Memory []uint32
 
 var AddressTable = make(map[string]int)
 var Mem = Memory{}
@@ -43,7 +43,7 @@ func instructBuild(t parse.ParserToken) {
 		if t.Type == "ref" {
 			if t.Reference.SubType == "reg" {
 				v, _ := strconv.Atoi(t.Reference.Id)
-				Mem = append(Mem, uint64(v+4))
+				Mem = append(Mem, uint32(v+4))
 			}
 		}
 	}

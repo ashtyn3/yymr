@@ -3,7 +3,7 @@ package parse
 type Instruct struct {
 	Name string
 	Args []*ParserToken
-	Code uint64
+	Code uint32
 }
 
 type Refer struct {
@@ -22,7 +22,7 @@ type Route struct {
 }
 
 type HexLit struct {
-	Value uint64
+	Value uint32
 }
 
 type CharsLit struct {

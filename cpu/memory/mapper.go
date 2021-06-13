@@ -5,8 +5,8 @@ import "log"
 type Device interface {
 	Start() uint
 	End() uint
-	GetInt(addr uint64) uint64
-	SetInt(addr uint64, value uint64)
+	GetInt(addr uint32) uint32
+	SetInt(addr uint32, value uint32)
 	Remap() bool
 }
 
@@ -28,21 +28,21 @@ func (M *Mapper) find(addr uint) Device {
 	return nil
 }
 
-func (M *Mapper) GetInt(addr uint64) uint64 {
+func (M *Mapper) GetInt(addr uint32) uint32 {
 	device := M.find(uint(addr))
 	if device == nil {
 		log.Fatal("Could not find mapping for address: ", addr)
 	}
 	if device.Remap() == true {
-		addr = addr - uint64(device.Start())
+		addr = addr - uint32(device.Start())
 	}
 	return device.GetInt(addr)
 }
 
-func (M *Mapper) SetInt(addr uint64, value uint64) {
+func (M *Mapper) SetInt(addr uint32, value uint32) {
 	device := M.find(uint(addr))
 	if device.Remap() == true {
-		addr = addr - uint64(device.Start())
+		addr = addr - uint32(device.Start())
 	}
 	device.SetInt(addr, value)
 }

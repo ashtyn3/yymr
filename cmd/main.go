@@ -21,14 +21,14 @@ func printChar(char int, ram *cpu.Ram, i *int, pos int) *cpu.Ram {
 	*i++
 	ram.Mem[*i] = cpu.R1
 	*i++
-	ram.Mem[*i] = uint64(char)
+	ram.Mem[*i] = uint32(char)
 
 	*i++
 	ram.Mem[*i] = opcode.Opcodes["MovRegMem"].Code
 	*i++
 	ram.Mem[*i] = cpu.R1
 	*i++
-	ram.Mem[*i] = uint64(0x3000 + pos)
+	ram.Mem[*i] = uint32(0x3000 + pos)
 	return ram
 }
 

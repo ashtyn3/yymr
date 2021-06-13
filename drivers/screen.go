@@ -19,11 +19,11 @@ func (r *Screen) Remap() bool {
 	return true
 }
 
-func (r *Screen) GetInt(addr uint64) uint64 {
+func (r *Screen) GetInt(addr uint32) uint32 {
 	return 0x0000
 }
 
-func (r *Screen) SetInt(addr uint64, value uint64) {
+func (r *Screen) SetInt(addr uint32, value uint32) {
 	//command := (value & 0xff00) >> 8
 	characterValue := value & 0x00ff
 

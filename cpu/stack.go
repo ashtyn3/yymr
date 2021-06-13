@@ -2,7 +2,7 @@ package cpu
 
 import "fmt"
 
-func (c *CPU) push(val uint64) {
+func (c *CPU) push(val uint32) {
 	sp := c.getRegister(Sp)
 	fmt.Println(sp)
 
@@ -11,7 +11,7 @@ func (c *CPU) push(val uint64) {
 	c.frameSize++
 }
 
-func (c *CPU) pop() uint64 {
+func (c *CPU) pop() uint32 {
 	next := c.getRegister(Sp) + 1
 	c.setRegister(Sp, next)
 	c.frameSize++

@@ -8,19 +8,19 @@ import (
 )
 
 type CPU struct {
-	Registers [12]uint64
+	Registers [12]uint32
 	Memory    *memory.Mapper
-	frameSize uint64
+	frameSize uint32
 }
 
-func (c *CPU) getRegister(r uint64) uint64 {
+func (c *CPU) getRegister(r uint32) uint32 {
 	if int(r) > len(c.Registers) {
 		log.Fatalln("Failed to get register:", r)
 	}
 	return c.Registers[r]
 }
 
-func (c *CPU) setRegister(r uint64, value uint64) {
+func (c *CPU) setRegister(r uint32, value uint32) {
 	if int(r) > len(c.Registers) {
 		log.Fatalln("Failed to get register:", r)
 	}
@@ -30,13 +30,13 @@ func (c *CPU) setRegister(r uint64, value uint64) {
 func Cpu() *CPU {
 	c := &CPU{}
 	c.Memory = &memory.Mapper{}
-	c.Registers[2] = uint64(len(c.Memory.Ranges) - 1)
-	c.Registers[3] = uint64(len(c.Memory.Ranges) - 1)
+	c.Registers[2] = uint32(len(c.Memory.Ranges) - 1)
+	c.Registers[3] = uint32(len(c.Memory.Ranges) - 1)
 
 	return c
 }
 
-func (c *CPU) Fetch() uint64 {
+func (c *CPU) Fetch() uint32 {
 	pointer := c.getRegister(Ip)
 	ip := c.Memory.GetInt(pointer)
 	c.setRegister(Ip, pointer+1)
@@ -44,7 +44,7 @@ func (c *CPU) Fetch() uint64 {
 	return ip
 }
 
-func (c *CPU) Execute(op uint64) int {
+func (c *CPU) Execute(op uint32) int {
 	switch op {
 	// Move instructions
 	case opcode.Opcodes["MovLitReg"].Code:
@@ -52,16 +52,16 @@ func (c *CPU) Execute(op uint64) int {
 			val := c.Fetch()
 			reg := c.Fetch()
 
-			c.setRegister(uint64(reg), val)
+			c.setRegister(uint32(reg), val)
 			break
 		}
 	case opcode.Opcodes["MovRegReg"].Code:
 		{
 			from := c.Fetch()
-			val := c.getRegister(uint64(from))
+			val := c.getRegister(uint32(from))
 			to := c.Fetch()
 
-			c.setRegister(uint64(to), val)
+			c.setRegister(uint32(to), val)
 			break
 		}
 	case opcode.Opcodes["MovMemReg"].Code:
@@ -70,14 +70,14 @@ func (c *CPU) Execute(op uint64) int {
 			to := c.Fetch()
 			val := c.Memory.GetInt(fromMem)
 
-			c.setRegister(uint64(to), val)
+			c.setRegister(uint32(to), val)
 			break
 		}
 	case opcode.Opcodes["MovRegMem"].Code:
 		{
 			fromReg := c.Fetch()
 			toMem := c.Fetch()
-			val := c.getRegister(uint64(fromReg))
+			val := c.getRegister(uint32(fromReg))
 
 			c.Memory.SetInt(toMem, val)
 			break
@@ -94,21 +94,21 @@ func (c *CPU) Execute(op uint64) int {
 		{
 			rFrom := c.Fetch()
 			rTo := c.Fetch()
-			addr := c.getRegister(uint64(rFrom))
+			addr := c.getRegister(uint32(rFrom))
 			val := c.Memory.GetInt(addr)
 
-			c.setRegister(uint64(rTo), val)
+			c.setRegister(uint32(rTo), val)
 			break
 		}
 	case opcode.Opcodes["MovLitAReg"].Code:
 		{
 			base := c.Fetch()
-			offset := c.getRegister(uint64(c.Fetch()))
+			offset := c.getRegister(uint32(c.Fetch()))
 			to := c.Fetch()
 
 			val := c.Memory.GetInt(base + offset)
 
-			c.setRegister(uint64(to), val)
+			c.setRegister(uint32(to), val)
 
 			break
 		}
@@ -117,8 +117,8 @@ func (c *CPU) Execute(op uint64) int {
 		{
 			r1 := c.Fetch()
 			r2 := c.Fetch()
-			val1 := c.getRegister(uint64(r1))
-			val2 := c.getRegister(uint64(r2))
+			val1 := c.getRegister(uint32(r1))
+			val2 := c.getRegister(uint32(r2))
 
 			c.setRegister(ACC, val1+val2)
 			break
@@ -127,8 +127,8 @@ func (c *CPU) Execute(op uint64) int {
 		{
 			r1 := c.Fetch()
 			r2 := c.Fetch()
-			val1 := c.getRegister(uint64(r1))
-			val2 := c.getRegister(uint64(r2))
+			val1 := c.getRegister(uint32(r1))
+			val2 := c.getRegister(uint32(r2))
 
 			c.setRegister(ACC, val1*val2)
 			break
@@ -136,25 +136,25 @@ func (c *CPU) Execute(op uint64) int {
 	case opcode.Opcodes["opcode.IncReg"].Code:
 		{
 			r := c.Fetch()
-			val := c.getRegister(uint64(r)) + 1
+			val := c.getRegister(uint32(r)) + 1
 
-			c.setRegister(uint64(r), val)
+			c.setRegister(uint32(r), val)
 			break
 		}
 	case opcode.Opcodes["DecReg"].Code:
 		{
 			r := c.Fetch()
-			val := c.getRegister(uint64(r)) - 1
+			val := c.getRegister(uint32(r)) - 1
 
-			c.setRegister(uint64(r), val)
+			c.setRegister(uint32(r), val)
 			break
 		}
 	case opcode.Opcodes["opcode.DivRegReg"].Code:
 		{
 			r1 := c.Fetch()
 			r2 := c.Fetch()
-			val1 := c.getRegister(uint64(r1))
-			val2 := c.getRegister(uint64(r2))
+			val1 := c.getRegister(uint32(r1))
+			val2 := c.getRegister(uint32(r2))
 
 			c.setRegister(ACC, val1/val2)
 			break
@@ -175,7 +175,7 @@ func (c *CPU) Execute(op uint64) int {
 			reg := c.Fetch()
 			pointer := c.Fetch()
 
-			if c.getRegister(uint64(reg)) == c.getRegister(ACC) {
+			if c.getRegister(uint32(reg)) == c.getRegister(ACC) {
 				c.setRegister(Ip, pointer)
 			}
 			break
@@ -195,7 +195,7 @@ func (c *CPU) Execute(op uint64) int {
 			reg := c.Fetch()
 			pointer := c.Fetch()
 
-			if c.getRegister(uint64(reg)) != c.getRegister(ACC) {
+			if c.getRegister(uint32(reg)) != c.getRegister(ACC) {
 				c.setRegister(Ip, pointer)
 			}
 			break
@@ -215,7 +215,7 @@ func (c *CPU) Execute(op uint64) int {
 			reg := c.Fetch()
 			pointer := c.Fetch()
 
-			if c.getRegister(uint64(reg)) <= c.getRegister(ACC) {
+			if c.getRegister(uint32(reg)) <= c.getRegister(ACC) {
 				c.setRegister(Ip, pointer)
 			}
 			break
@@ -235,7 +235,7 @@ func (c *CPU) Execute(op uint64) int {
 			reg := c.Fetch()
 			pointer := c.Fetch()
 
-			if c.getRegister(uint64(reg)) < c.getRegister(ACC) {
+			if c.getRegister(uint32(reg)) < c.getRegister(ACC) {
 				c.setRegister(Ip, pointer)
 			}
 			break
@@ -255,7 +255,7 @@ func (c *CPU) Execute(op uint64) int {
 			reg := c.Fetch()
 			pointer := c.Fetch()
 
-			if c.getRegister(uint64(reg)) >= c.getRegister(ACC) {
+			if c.getRegister(uint32(reg)) >= c.getRegister(ACC) {
 				c.setRegister(Ip, pointer)
 			}
 			break
@@ -275,7 +275,7 @@ func (c *CPU) Execute(op uint64) int {
 			reg := c.Fetch()
 			pointer := c.Fetch()
 
-			if c.getRegister(uint64(reg)) > c.getRegister(ACC) {
+			if c.getRegister(uint32(reg)) > c.getRegister(ACC) {
 				c.setRegister(Ip, pointer)
 			}
 			break
@@ -293,7 +293,7 @@ func (c *CPU) Execute(op uint64) int {
 		}
 	case opcode.Opcodes["PshReg"].Code:
 		{
-			val := c.getRegister(uint64(c.Fetch()))
+			val := c.getRegister(uint32(c.Fetch()))
 			c.push(val)
 			break
 		}
@@ -301,7 +301,7 @@ func (c *CPU) Execute(op uint64) int {
 		{
 			r := c.Fetch()
 			val := c.pop()
-			c.setRegister(uint64(r), val)
+			c.setRegister(uint32(r), val)
 			break
 		}
 		// sub-routines
@@ -315,14 +315,14 @@ func (c *CPU) Execute(op uint64) int {
 		}
 	case opcode.Opcodes["CalReg"].Code:
 		{
-			addr := c.getRegister(uint64(c.Fetch()))
+			addr := c.getRegister(uint32(c.Fetch()))
 			c.saveState()
 
 			c.setRegister(Ip, addr)
 		}
 	case opcode.Opcodes["Ret"].Code:
 		{
-			addr := c.getRegister(uint64(c.Fetch()))
+			addr := c.getRegister(uint32(c.Fetch()))
 			c.popState()
 
 			c.setRegister(Ip, addr)

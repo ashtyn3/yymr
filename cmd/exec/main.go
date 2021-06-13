@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"yymr/cpu"
 	"yymr/drivers"
@@ -18,7 +19,7 @@ func main() {
 
 	p.Parse(os.Args)
 	c := cpu.Cpu()
-	ram := cpu.RamDevice(256 * 256)
+	ram := cpu.RamDevice(math.MaxInt32)
 	screen := drivers.ScreenDevice()
 	c.Memory.Map(ram)
 	c.Memory.Map(screen)
@@ -29,10 +30,10 @@ func main() {
 	}
 
 	f, _ := os.ReadFile(*name)
-	mem := []uint64{}
+	mem := []uint32{}
 	for _, b := range f {
 		if b != 0 {
-			mem = append(mem, uint64(b))
+			mem = append(mem, uint32(b))
 		}
 	}
 
