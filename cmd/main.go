@@ -57,7 +57,7 @@ func main() {
 	tmp := os.TempDir()
 	id := tempId()
 	name, _ := filepath.Abs(f.Name())
-	os.Setenv("WORK", tmp+"/"+id)
+	os.Setenv("WORK", tmp+"/yymr-"+id)
 
 	os.Mkdir(os.Getenv("WORK"), 0755)
 	os.Chdir(os.Getenv("WORK"))
