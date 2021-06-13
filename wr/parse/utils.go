@@ -31,19 +31,19 @@ var keywords = map[string]string{
 	"jmpNE":  "JmpNotEq",
 	"jmpNER": "JmpNotRegEq",
 
-	"jmpE":  "JmpEq",
+	"jmpEL": "JmpEq",
 	"jmpER": "JmpRegEq",
 
-	"jmpLE":  "JmpLessEq",
+	"jmpLEL": "JmpLessEq",
 	"jmpLER": "JmpLessRegEq",
 
-	"jmpL":  "JmpLess",
+	"jmpLL": "JmpLess",
 	"jmpLR": "JmpLessReg",
 
-	"jmpGE":  "JmpGreaterEq",
+	"jmpGEL": "JmpGreaterEq",
 	"jmpGER": "JmpGreaterRegEq",
 
-	"jmpG":  "JmpGreater",
+	"jmpGL": "JmpGreater",
 	"jmpGR": "JmpRegGreater",
 
 	// stack
@@ -54,9 +54,9 @@ var keywords = map[string]string{
 	// sub-routine
 	"callL": "CalLit",
 	"callR": "CalReg",
-	"ret":   "Ret",
 
 	// sys-calls
+	"ret": "Ret",
 	"hlt": "Hlt",
 }
 

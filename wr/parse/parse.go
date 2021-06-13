@@ -13,6 +13,7 @@ var pointer int
 var Tokens []token.Token
 var Tok token.Token
 var Size int = 0
+var Symbols = make(map[string]uint32)
 
 func getTok() {
 	if pointer >= len(Tokens) {
@@ -43,6 +44,7 @@ func parseId() ParserToken {
 
 	// set memory address to starting size
 	route.Index = Size
+	Symbols[route.Name] = uint32(route.Index)
 	for {
 		getTok()
 		if Tok.Type == token.RightBrack {
@@ -117,6 +119,13 @@ func parseRef() ParserToken {
 			os.Exit(0)
 		}
 		ref.Id = strings.TrimPrefix(Tok.Text, "r")
+	} else if Tok.Type == token.RouteId {
+		ref.SubType = "route"
+		sym := Symbols[Tok.Text]
+		if sym == 0 {
+			fmt.Println("Warning:" + strconv.Itoa(Tok.Line) + ": id " + Tok.Text + " points to address 0")
+		}
+		ref.Id = strconv.Itoa(int(sym))
 	}
 
 	return ParserToken{Type: "ref", Reference: &ref}
@@ -132,7 +141,7 @@ func do(move bool) ParserToken {
 		return parseInstruction()
 	} else if Tok.Type == token.Hex {
 		return parseLit()
-	} else if Tok.Type == token.RegisterId {
+	} else if Tok.Type == token.RegisterId || Tok.Type == token.RouteId {
 		return parseRef()
 	}
 	return ParserToken{}
