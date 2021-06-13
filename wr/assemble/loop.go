@@ -14,7 +14,7 @@ type Build struct {
 	Exec     bool
 	Toks     []parse.ParserToken
 }
-type Memory []uint16
+type Memory []uint64
 
 var AddressTable = make(map[string]int)
 var Mem = Memory{}
@@ -43,7 +43,7 @@ func instructBuild(t parse.ParserToken) {
 		if t.Type == "ref" {
 			if t.Reference.SubType == "reg" {
 				v, _ := strconv.Atoi(t.Reference.Id)
-				Mem = append(Mem, uint16(v+4))
+				Mem = append(Mem, uint64(v+4))
 			}
 		}
 	}
@@ -58,7 +58,11 @@ func (b *Build) Assemble() {
 			fmt.Println(strconv.Itoa(t.Line) + ": expected sub-routine definition")
 		}
 	}
-	f, _ := os.Create(b.Filename)
+	f, err := os.Create(b.Filename)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
 	binary.Write(f, binary.LittleEndian, Mem)
 
 	if b.Exec {

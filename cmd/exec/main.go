@@ -6,24 +6,33 @@ import (
 	"yymr/cpu"
 	"yymr/drivers"
 	opcode "yymr/opcodes"
+
+	"github.com/akamensky/argparse"
 )
 
 func main() {
-	if len(os.Args[1:]) == 0 {
-		fmt.Println("No file specified")
-		os.Exit(0)
-	}
+	p := argparse.NewParser("yymr-exec", "VM execution")
+
+	name := p.String("i", "input", &argparse.Options{Required: true})
+	debug := p.Flag("d", "debug", &argparse.Options{})
+
+	p.Parse(os.Args)
 	c := cpu.Cpu()
 	ram := cpu.RamDevice(256 * 256)
 	screen := drivers.ScreenDevice()
 	c.Memory.Map(ram)
 	c.Memory.Map(screen)
 
-	f, _ := os.ReadFile(os.Args[1])
-	mem := []uint16{}
+	if *name == "" {
+		fmt.Println(p.Usage("Needs filename"))
+		os.Exit(0)
+	}
+
+	f, _ := os.ReadFile(*name)
+	mem := []uint64{}
 	for _, b := range f {
 		if b != 0 {
-			mem = append(mem, uint16(b))
+			mem = append(mem, uint64(b))
 		}
 	}
 
@@ -32,5 +41,8 @@ func main() {
 	}
 	ram.Mem[len(mem)] = opcode.Opcodes["Hlt"].Code
 	c.Run()
-	c.DebugRegisters()
+
+	if *debug == true {
+		c.DebugRegisters()
+	}
 }

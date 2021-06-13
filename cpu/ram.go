@@ -1,7 +1,7 @@
 package cpu
 
 type Ram struct {
-	Mem []uint16
+	Mem []uint64
 }
 
 func (r *Ram) Remap() bool {
@@ -14,11 +14,11 @@ func (r *Ram) End() uint {
 	return 0xffff
 }
 
-func (r *Ram) GetInt(addr uint16) uint16 {
+func (r *Ram) GetInt(addr uint64) uint64 {
 	return r.Mem[addr]
 }
 
-func (r *Ram) SetInt(addr uint16, value uint16) {
+func (r *Ram) SetInt(addr uint64, value uint64) {
 	r.Mem[addr] = value
 }
 

@@ -2,5 +2,5 @@ package opcode
 
 type Opcode struct {
 	Size int
-	Code uint16
+	Code uint64
 }

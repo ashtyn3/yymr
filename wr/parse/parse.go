@@ -101,7 +101,7 @@ func parseLit() ParserToken {
 	if Tok.Type == token.Hex {
 		lit.Type = "hex"
 		num, _ := strconv.ParseUint(Tok.Text, 16, 16)
-		lit.Hex.Value = uint16(num)
+		lit.Hex.Value = uint64(num)
 	}
 
 	return ParserToken{Type: "lit", Literal: &lit}
