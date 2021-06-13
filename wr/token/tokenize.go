@@ -107,6 +107,9 @@ func (c Chars) Tokenize() []Token {
 			} else if id == "inc" || id == "dec" {
 				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
 				continue
+			} else if id == "jmpE" || id == "jmpNE" || id == "jmpL" || id == "jmpLE" || id == "jmpG" || id == "jmpGE" {
+				tokens = append(tokens, Token{Type: Keyword, Line: Lines, Text: id})
+				continue
 			}
 
 			tokens = append(tokens, Token{Type: Id, Line: Lines, Text: id})
